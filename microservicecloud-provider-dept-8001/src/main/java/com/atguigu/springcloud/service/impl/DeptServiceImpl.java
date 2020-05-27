@@ -3,6 +3,8 @@ package com.atguigu.springcloud.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.atguigu.springcloud.dao.DeptDao;
@@ -10,27 +12,24 @@ import com.atguigu.springcloud.entities.Dept;
 import com.atguigu.springcloud.service.DeptService;
 
 @Service
-public class DeptServiceImpl implements DeptService
-{
-	@Autowired
-	private DeptDao dao;
-	
-	@Override
-	public boolean add(Dept dept)
-	{
-		return dao.addDept(dept);
-	}
+public class DeptServiceImpl implements DeptService {
+    @Autowired
+    private DeptDao dao;
 
-	@Override
-	public Dept get(Long id)
-	{
-		return dao.findById(id);
-	}
+    @Override
+    public boolean add(Dept dept) {
+        return dao.addDept(dept);
+    }
 
-	@Override
-	public List<Dept> list()
-	{
-		return dao.findAll();
-	}
+    @Override
+    @Cacheable(value = "dept8001", key = "#id")
+    public Dept get(Long id) {
+        return dao.findById(id);
+    }
+
+    @Override
+    public List<Dept> list() {
+        return dao.findAll();
+    }
 
 }
